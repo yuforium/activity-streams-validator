@@ -137,7 +137,7 @@ export namespace ActivityStreams {
         return a;
       }
 
-      if (typeof value === 'string' && this.options.convertTextToLinks) {
+      if (typeof value === 'string' && this.options.convertTextToLinks && this.types && this.types['Link']) {
         const link = new this.types['Link'](value);
         return link;
       }
@@ -147,7 +147,7 @@ export namespace ActivityStreams {
       }
 
       if (typeof value.type === 'string') {
-        if (this.types[value.type]) {
+        if (this.types && this.types[value.type]) {
           return plainToInstance(this.types[value.type], value, options);
         }
 
@@ -158,7 +158,7 @@ export namespace ActivityStreams {
         return undefined;
       }
       else if (Array.isArray(value.type) && this.options.enableCompositeTypes) {
-        const types = value.type.filter(t => this.types[t]);
+        const types = value.type.filter(t => (this.types || {})[t]);
         const symbol = Symbol.for(types.join('-'));
 
         if (!types.length) {
@@ -171,7 +171,7 @@ export namespace ActivityStreams {
           return plainToInstance(ctor, value, options);
         }
         else {
-          const ctors = types.map((t) => {return this.types[t]});
+          const ctors = types.map((t) => {return (this.types || {})[t]});
           const cls = this.composeClass(...ctors);
 
           this.composites[symbol] = cls;
@@ -418,7 +418,7 @@ export namespace ActivityStreams {
       }
     }
 
-    return transformer.transform(params, {transformLinks: true});
+    return transformer.transform(params);
   };
 
   /**

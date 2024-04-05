@@ -44,7 +44,6 @@
   },
   "homepage": "https://github.com/yuforium/activity-streams-validator#readme",
   "files": [
-    "dist",
-    "lib"
+    "dist"
   ]
 }

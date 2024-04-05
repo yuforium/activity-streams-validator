@@ -1,4 +1,4 @@
-import { ClassTransformOptions, Expose, plainToInstance, Transform, TransformationType, TransformFnParams, TransformOptions } from "class-transformer";
+import { Expose, plainToInstance, Transform, TransformationType, TransformFnParams, TransformOptions } from "class-transformer";
 import { IsInt, IsMimeType, IsNotEmpty, IsNumber, IsObject, IsPositive, IsRFC3339, IsString, IsUrl, Min } from "class-validator";
 import { IsOptional } from "./decorator/is-optional";
 import { ASLink } from "./interfaces/as-link.interface";
@@ -126,20 +126,29 @@ export namespace ActivityStreams {
       constructors.forEach(ctor => (this.types as any)[ctor.type as string] = ctor);
     }
 
-    transform(
-      {value, options}: {value: {type: string | string[], [k: string]: any}, options?: ClassTransformOptions}
-    ): any {
+    transform(params: Partial<Pick<TransformFnParams, "value" | "options">>, opts: {convertLinks: boolean} = {convertLinks: false}) {
+      let {value, options} = params;
       options = Object.assign({excludeExtraneousValues: true, exposeUnsetFields: false}, options);
 
       if (Array.isArray(value)) {
         const a: ASRoot[] = [];
-        value.forEach(v => a.push(this.transform({value: v, options})));
+        value.forEach(v => {
+          const pushParams = Object.assign({}, params, {value: v})
+          a.push(this.transform(pushParams, opts));
+        });
         return a;
       }
 
-      if (typeof value === 'string' && this.options.convertTextToLinks && this.types && this.types['Link']) {
-        const link = new this.types['Link'](value);
-        return link;
+      if (typeof value === 'string') {
+        if (opts.convertLinks && this.types && this.types['Link']) {
+          const link = new this.types['Link'](value);
+          return link;
+        }
+        return value;
+      }
+
+      if (value === null) {
+        return value;
       }
 
       if (typeof value !== 'object') {
@@ -158,7 +167,7 @@ export namespace ActivityStreams {
         return undefined;
       }
       else if (Array.isArray(value.type) && this.options.enableCompositeTypes) {
-        const types = value.type.filter(t => (this.types || {})[t]);
+        const types = value.type.filter((t: any) => (this.types || {})[t]);
         const symbol = Symbol.for(types.join('-'));
 
         if (!types.length) {
@@ -171,7 +180,7 @@ export namespace ActivityStreams {
           return plainToInstance(ctor, value, options);
         }
         else {
-          const ctors = types.map((t) => {return (this.types || {})[t]});
+          const ctors = types.map((t: any) => {return (this.types || {})[t]});
           const cls = this.composeClass(...ctors);
 
           this.composites[symbol] = cls;
@@ -401,6 +410,11 @@ export namespace ActivityStreams {
 
   function linkTransformFn(params: TransformFnParams): any {
     const {type, value} = params;
+
+    // return anything null or undefined directly
+    if (!value) {
+      return value;
+    }
 
     if (Array.isArray(value)) {
       return value.map(v => linkTransformFn({...params, value: v}));

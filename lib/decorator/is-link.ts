@@ -15,10 +15,7 @@ export function IsLink(
       name: IS_LINK,
       validator: {
         validate: (value, _args): boolean => {
-          console.log('testing value', value);
-          const isLink = isURL(value, {require_tld: false}) || isOneOfInstance(value, [Link]);
-          console.log(`test of ${value} results in ${isLink ? 'true':'false'}`);
-          return isLink;
+          return isURL(value, {require_tld: false}) || isOneOfInstance(value, [Link]);
         },
         defaultMessage: buildMessage((eachPrefix, args) => {
           if (args?.constraints?.[0]) {

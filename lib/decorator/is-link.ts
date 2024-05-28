@@ -15,14 +15,10 @@ export function IsLink(
       name: IS_LINK,
       validator: {
         validate: (value, _args): boolean => {
-          return isURL(value, {require_tld: false}) || isOneOfInstance(value, [Link]);
+          return isURL(value, {require_tld: false}) || (isOneOfInstance(value, [Link]) && isURL(value.href, {require_tld: false}));
         },
-        defaultMessage: buildMessage((eachPrefix, args) => {
-          if (args?.constraints?.[0]) {
-            return eachPrefix + `$property must be an instance of Link or resolve to a valid URL.`;
-          } else {
-            return eachPrefix + `${IS_LINK} decorator expects and object as value, but got falsy value.`;
-          }
+        defaultMessage: buildMessage((eachPrefix, _args) => {
+          return eachPrefix + `$property must be an instance of Link or resolve to a valid URL.`;
         }, validationOptions),
       },
     },

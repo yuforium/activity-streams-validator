@@ -103,7 +103,10 @@ validate(custom).then(errors => {
 });
 ```
 
-## Requiring Optional Fields
+## Additional Validators
+The `@IsRequired()`, `@IsOneOfInstance()`, and `@IsLink()` decorators are available for use in your custom classes.  These additional decorators are used to enforce additional validation rules on your custom classes.
+
+### Requiring Optional Fields with `@IsRequired()`
 Many fields in the Activity Streams specification are optional, but you may want to make them required your own validation purposes.
 
 Extend the classes you need and then use the `@IsRequired()` decorator for these fields.
@@ -129,6 +132,20 @@ validate(note); // fails
 note.content = "If you can dodge a wrench, you can dodge a ball.";
 
 validate(note); // works
+```
+
+### Additional Validation for Specific Types with `@IsOneOfInstance()` and `@IsLink()`
+The `@IsOneOfInstance()` and `@IsLink()` decorators are used to enforce additional validation rules on your custom classes.  The `@IsOneOfInstance()` decorator is used to ensure that a field is an instance of one of the provided classes, while the `@IsLink()` decorator is used to ensure that a field is a valid link or URL.
+
+For example, using the `@IsLink()` decorator can ensure that certain fields are only references to other Activity Streams objects (such as a user) and don't require creation of a new object:
+
+```typescript
+import { Note, IsLink } from '@yuforium/activity-streams';
+
+export class CreateNoteDto extends Note {
+  @IsLink()
+  public attributedTo;
+}
 ```
 
 ## Resolving Links

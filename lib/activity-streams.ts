@@ -5,6 +5,7 @@ import { ASLink } from "./interfaces/as-link.interface";
 import { ASObject, ASObjectOrLink } from "./interfaces/as-object.interface";
 import { ASCollection } from "./interfaces/as-collection.interface";
 import { Constructor } from "./util/constructor";
+import { ResolvableArray } from "./util/resolvable-array";
 import { ASActivity } from "./interfaces/as-activity.interface";
 import { ASCollectionPage } from "./interfaces/as-collection-page.interface";
 import { ASDocument } from "./interfaces/as-document.interface";
@@ -425,6 +426,10 @@ export namespace ActivityStreams {
     const {type, value} = params;
 
     customTransformer = customTransformer || transformer;
+
+    if (type === TransformationType.PLAIN_TO_CLASS && Array.isArray(value)) {
+      return new ResolvableArray(...value);
+    }
 
     // convert strings on plain to class
     if (type === TransformationType.PLAIN_TO_CLASS && typeof value === 'string') {

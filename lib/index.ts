@@ -10,3 +10,4 @@ export * from './decorator/is-link';
 export * from './interfaces';
 
 export { IsNotEmptyArray } from './util/is-not-empty-array';
+export { ResolvableArray } from './util/resolvable-array';

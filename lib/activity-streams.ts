@@ -184,7 +184,7 @@ export namespace ActivityStreams {
       if (this.types && this.types['Link'] && this.isValidLink(url)) {
         return new this.types['Link'](url) as ASLink;
       }
-      throw new Error('Invalid URL');
+      throw new Error(`Invalid URL ${url} for Link.`);
     }
 
     public linkToPlain(link: object) {
@@ -202,27 +202,14 @@ export namespace ActivityStreams {
       return value.startsWith('http://') || value.startsWith('https://');
     }
 
-    // this is broken
-    // see https://stackoverflow.com/questions/61779822/class-validator-decorators-on-typescript-mixin-classes for possible solution
-    protected composeClass(...constructors: Constructor<any>[]): Constructor<any> {
+    protected composeClass(...constructors: Constructor<any>[]) {
       return constructors.reduce((prev: Constructor<any>, curr: Constructor<any>) => {
-        const combined = class extends prev { };
-        const instance = new curr;
-
-        Reflect.ownKeys(instance).forEach(name => {
-          Reflect.defineProperty(
-            combined.prototype,
-            name,
-            Reflect.getOwnPropertyDescriptor(instance, name) || Object.create(null)
-          );
-        });
-
-        return combined;
+        return this.mixinClass(prev, curr);
       }, class {});
     }
 
     protected mixinClass(target: Constructor<any>, source: Constructor<any>): Constructor<any> {
-      const cls = class extends target { };
+      const cls = class extends target { }
 
       Object.getOwnPropertyNames(source.prototype).forEach((name) => {
         Object.defineProperty(
@@ -425,10 +412,12 @@ export namespace ActivityStreams {
   function transformLinkFn(params: TransformFnParams, customTransformer?: Transformer): any {
     const {type, value} = params;
 
-    customTransformer = customTransformer || transformer;
+    customTransformer = customTransformer || transformer as Transformer;
 
+    // convert array values to a resolvable array
     if (type === TransformationType.PLAIN_TO_CLASS && Array.isArray(value)) {
-      return new ResolvableArray(...value);
+      const values = value.map(v => typeof v === 'string' ? customTransformer?.plainToLink(v) : v);
+      return new ResolvableArray(...values);
     }
 
     // convert strings on plain to class
@@ -436,6 +425,9 @@ export namespace ActivityStreams {
       return customTransformer.plainToLink(value);
     }
 
+    if (type === TransformationType.CLASS_TO_PLAIN && value instanceof ResolvableArray) {
+      return value.map(v => typeof v === 'object' && v._asmeta?.baseType === 'link' ? customTransformer?.linkToPlain(v) : v);
+    }
     // convert links on class to plain
     if (type === TransformationType.CLASS_TO_PLAIN && typeof value === 'object') {
       return customTransformer.linkToPlain(value);

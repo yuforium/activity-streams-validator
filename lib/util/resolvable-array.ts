@@ -6,8 +6,13 @@ export class ResolvableArray<T extends ActivityStreams.ASResolvable> extends Arr
   }
 
   async resolve(customResolver?: ActivityStreams.ResolveHandler) {
-    return Promise.all(
-      this.map(async (item) => item.resolve(customResolver))
+    return await Promise.all(
+      this.map(async (item) => {
+        if (typeof item.resolve !== 'function') {
+          return item;
+        }
+        return await item.resolve(customResolver);
+      })
     );
   }
 }

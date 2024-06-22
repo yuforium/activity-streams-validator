@@ -17,5 +17,5 @@ ActivityStreams.transformer.add(Link);
  *
  * https://www.w3.org/ns/activitystreams#Mention
  */
-export class Mention extends ActivityStreams.link('Mention') {};
+export class Mention extends ActivityStreams.link('Mention') { };
 ActivityStreams.transformer.add(Mention);

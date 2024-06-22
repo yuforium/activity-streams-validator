@@ -37,7 +37,7 @@ export namespace ActivityStreams {
    */
   export interface ResolveHandler {
     setNext(handler: ResolveHandler): ResolveHandler;
-    handle(request: string): Promise<ASObject | ASLink | string>;
+    handle(request: string): Promise<ASObjectOrLink>;
   }
 
   /**
@@ -308,7 +308,7 @@ export namespace ActivityStreams {
        * Resolves the link and returns the resolved object.
        * @param customResolver A custom resolver to use for this link.  Runs even if the Link had been previously resolved.
        */
-      async resolve(customResolver?: ResolveHandler) {
+      async resolve(customResolver?: ResolveHandler): Promise<ASObjectOrLink> {
         if (this.href === undefined) {
           throw new Error('Link href is not set');
         }
@@ -457,7 +457,7 @@ export namespace ActivityStreams {
     class ActivityStreamsObject extends root('object', Base) implements ASObject {
       static readonly type: string | string[] = namedType;
 
-      async resolve(_resolver?: ResolveHandler): Promise<any> {
+      async resolve(_resolver?: ResolveHandler): Promise<ASObject> {
         return this;
       }
 

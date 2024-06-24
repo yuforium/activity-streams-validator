@@ -23,7 +23,7 @@ export interface ASObject extends ASRoot {
   generator?: ASObjectOrLink | ASObjectOrLink[];
   icon?: ASObjectOrLink | ASObjectOrLink[];
   image?: ASObjectOrLink | ASObjectOrLink[];
-  inReplyTo?: ASObjectOrLink | ASObjectOrLink[];
+  inReplyTo?: ASObjectOrLink;
   location?: ASObjectOrLink | ASObjectOrLink[];
   preview?: ASObjectOrLink | ASObjectOrLink[];
   published?: string;

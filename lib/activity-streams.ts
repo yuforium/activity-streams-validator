@@ -586,7 +586,7 @@ export namespace ActivityStreams {
       @IsOptional()
       @Expose()
       @TransformLink()
-      inReplyTo?: ASObjectOrLink | ASObjectOrLink[];
+      inReplyTo?: ASObjectOrLink;
 
       @IsOptional()
       @Expose()

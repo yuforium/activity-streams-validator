@@ -13,6 +13,7 @@ import { ASIntransitiveActivity } from "./interfaces/as-intransitive-activity.in
 import { ContentMap } from "./util/content-map";
 import { IsNotEmptyArray } from "./util/is-not-empty-array";
 import { ASRoot } from "./interfaces/as-root.interface";
+import { ASContext } from "./types/as-context.type";
 
 /**
  * Base collection of ActivityStreams objects.
@@ -188,7 +189,7 @@ export namespace ActivityStreams {
     }
 
     public linkToPlain(link: object) {
-      if (typeof link === 'object' && (link as any)._asmeta?.baseType === 'link') {
+      if (typeof link === 'object' && (link as any)?._asmeta?.baseType === 'link') {
         return (link as any).toJSON();
       }
 
@@ -343,7 +344,7 @@ export namespace ActivityStreams {
       @IsString({each: true})
       @IsOptional()
       @Expose()
-      '@context'?: string | string[] = 'https://www.w3.org/ns/activitystreams';
+      '@context'?: ASContext = 'https://www.w3.org/ns/activitystreams';
 
       @IsString()
       @IsNotEmpty()
@@ -402,7 +403,7 @@ export namespace ActivityStreams {
   export class PublicLink extends link('Link') { };
 
   export const linkTransformOptions = {
-    transformLinks: true,
+    transformLinks: false,
     type: 'Link'
   };
 

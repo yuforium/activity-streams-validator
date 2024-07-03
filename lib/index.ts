@@ -1,3 +1,4 @@
+export { ASContext } from './types/as-context.type';
 export * from './activity-streams';
 export * from './objects';
 export * from './activities';

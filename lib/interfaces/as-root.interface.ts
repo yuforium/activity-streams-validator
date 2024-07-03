@@ -1,7 +1,7 @@
 import { ASContext } from "../types/as-context.type";
 
 export interface ASRoot {
-  '@context'?: ASContext;
+  '@context'?: ASContext | ASContext[];
   id?: string;
   type: string | string[];
 

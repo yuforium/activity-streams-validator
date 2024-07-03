@@ -464,7 +464,7 @@ export namespace ActivityStreams {
 
       @IsString()
       @IsOptional()
-      '@context'?: string | string[] = 'https://www.w3.org/ns/activitystreams';
+      '@context'?: ASContext | ASContext[] = 'https://www.w3.org/ns/activitystreams';
 
       @IsString({each: true})
       @IsNotEmpty()

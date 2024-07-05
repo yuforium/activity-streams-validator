@@ -107,7 +107,7 @@ export namespace ActivityStreams {
   export class Transformer {
     protected composites: {[k: symbol]: Constructor<ASTransformable>} = {};
     protected options: TransformerOptions = {
-      convertTextToLinks: true,
+      convertTextToLinks: false,
       composeWithMissingConstructors: true,
       enableCompositeTypes: true,
       alwaysReturnValueOnTransform: false
@@ -121,7 +121,7 @@ export namespace ActivityStreams {
       if (types === undefined) {
         this.types = Object.assign({}, transformerTypes);
       }
-      Object.assign(this.options, options);
+      this.options = { ...this.options, ...options };
     }
 
     add(...constructors: ASConstructor<{type: string | string[]}>[]) {
@@ -181,7 +181,11 @@ export namespace ActivityStreams {
       return value;
     }
 
-    public plainToLink(url: string): ASLink {
+    public plainToLink(url: string): ASLink | string {
+      if (!this.options.convertTextToLinks) {
+        return url;
+      }
+
       if (this.types && this.types['Link'] && this.isValidLink(url)) {
         return new this.types['Link'](url) as ASLink;
       }

@@ -1,5 +1,5 @@
-import { ActivityStreams, Actor } from ".";
-import { Constructor } from "./util/constructor";
+import { ActivityStreams } from './activity-streams';
+import { Actor } from './objects';
 
 export class Application extends Actor {
   static readonly type = "Application";
@@ -20,3 +20,5 @@ export class Person extends Actor {
 export class Service extends Actor {
   static readonly type = "Service";
 }
+
+ActivityStreams.transformer.add(Application, Group, Organization, Person, Service);

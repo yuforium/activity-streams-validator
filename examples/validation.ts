@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Note } from '../src';
+import { Note } from '../lib';
 import { validate } from 'class-validator';
 
 const note = new Note();

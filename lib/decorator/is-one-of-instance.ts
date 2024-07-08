@@ -8,7 +8,7 @@ export const IS_ONE_OF_INSTANCE = 'isOneOfInstance';
  */
 export function isOneOfInstance(object: unknown, targetTypeConstructors: Constructor<any>[]): boolean {
 	return targetTypeConstructors.some(targetTypeConstructor => {
-		targetTypeConstructor && typeof targetTypeConstructor === 'function' && object instanceof targetTypeConstructor
+		return targetTypeConstructor && typeof targetTypeConstructor === 'function' && object instanceof targetTypeConstructor;
 	});
 }
 

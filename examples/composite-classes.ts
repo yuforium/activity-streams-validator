@@ -1,4 +1,4 @@
-import { ActivityStreams } from '../src';
+import { ActivityStreams } from '../lib';
 import 'reflect-metadata';
 
 class Duck extends ActivityStreams.object('Duck') {

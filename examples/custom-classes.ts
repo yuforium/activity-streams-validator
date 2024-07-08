@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsString, validate } from 'class-validator';
-import { ActivityStreams } from '../src';
+import { ActivityStreams } from '../lib';
 import 'reflect-metadata';
 
 

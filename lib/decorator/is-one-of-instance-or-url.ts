@@ -4,15 +4,6 @@ import { isOneOfInstance } from "./is-one-of-instance";
 
 export const IS_ONE_OF_INSTANCE_OR_URL = 'isOneOfInstanceOrUrl';
 
-export function isOneOfInstanceOrUrl(object: unknown, targetTypeConstructors: Constructor<any>[]) {
-  if (typeof object === 'string') {
-    return isURL(object);
-  }
-  else {
-    return isOneOfInstance(object, targetTypeConstructors);
-  }
-}
-
 /**
  * Checks if the value is an instance of the specified object.
  */
@@ -27,7 +18,7 @@ export function IsOneOfInstanceOrUrl(
       constraints: targetTypes,
       validator: {
         validate: (value, args): boolean => {
-          return isURL(value) || isOneOfInstance(value, Array.isArray(args?.constraints[0]) ? args?.constraints[0] as Constructor<any>[]: [args?.constraints[0]])
+          return isURL(value) || isOneOfInstance(value, Array.isArray(args?.constraints[0]) ? args?.constraints[0] as Constructor<any>[]: [args?.constraints[0]]);
         },
         defaultMessage: buildMessage((eachPrefix, args) => {
           if (args?.constraints[0]) {

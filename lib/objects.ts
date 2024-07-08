@@ -1,10 +1,9 @@
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsRFC3339, IsString, Max, Min } from 'class-validator';
-import { ActivityStreams } from '.';
+import { ActivityStreams } from './activity-streams';
 import { ASCollection } from './interfaces/as-collection.interface';
 import { ASCollectionPage } from './interfaces/as-collection-page.interface';
-import { ASObject, ASObjectOrLink } from './interfaces/as-object.interface';
-import { Constructor } from './util/constructor';
+import { ASObjectOrLink } from './interfaces/as-object.interface';
 
 /**
  * @category Core
@@ -23,6 +22,7 @@ export class Event extends ActivityStreams.object('Event') {};
 export class Image extends ActivityStreams.document('Image') {};
 export class Note extends ActivityStreams.object('Note') {};
 export class Page extends ActivityStreams.document('Page') {};
+
 ActivityStreams.transformer.add(Actor, Article, Audio, Collection, OrderedCollection, CollectionPage, OrderedCollectionPage, Document, Event, Image, Note, Page);
 
 class PlaceDef {
@@ -93,4 +93,4 @@ ActivityStreams.transformer.add(Tombstone);
 export class Video extends ActivityStreams.document('Video', class {}) {};
 ActivityStreams.transformer.add(Video);
 
-export { BaseObject as Object }
+export { BaseObject as Object };

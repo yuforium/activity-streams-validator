@@ -1,4 +1,3 @@
-import { Expose, Transform, Type } from "class-transformer";
 import { IsOptional } from "class-validator";
 import { ActivityStreams } from "./activity-streams";
 import { ASObjectOrLink } from "./interfaces";

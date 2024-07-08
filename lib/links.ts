@@ -1,6 +1,4 @@
-import { ActivityStreams } from ".";
-import { ASLink } from "./interfaces/as-link.interface";
-import { Constructor } from "./util/constructor";
+import { ActivityStreams } from "./activity-streams";
 
 /**
  * A Link describes a qualified, indirect reference to another resource that is closely related to the conceptual model of Links as established in [RFC5988]. The properties of the Link object are not the properties of the referenced resource, but are provided as hints for rendering agents to understand how to make use of the resource. For example, height and width might represent the desired rendered size of a referenced image, rather than the actual pixel dimensions of the referenced image.
@@ -11,11 +9,13 @@ import { Constructor } from "./util/constructor";
  *
  * https://www.w3.org/TR/activitystreams-core/#link
  */
-export class Link extends ActivityStreams.link('Link') {};
+export class Link extends ActivityStreams.link('Link') { };
+ActivityStreams.transformer.add(Link);
 
 /**
  * A specialized Link that represents an @mention.
  *
  * https://www.w3.org/ns/activitystreams#Mention
  */
-export const Mention: Constructor<ASLink> = ActivityStreams.link('Mention', class Mention {});
+export class Mention extends ActivityStreams.link('Mention') { };
+ActivityStreams.transformer.add(Mention);

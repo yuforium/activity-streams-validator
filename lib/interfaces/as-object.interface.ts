@@ -1,12 +1,15 @@
+import { ASRoot } from "./as-root.interface";
 import { ASCollection } from "./as-collection.interface";
 import { ASLink } from "./as-link.interface";
+import { ActivityStreams } from "../activity-streams";
+import { ASContext } from "../types/as-context.type";
 
 export type ASObjectOrLink = ASObject | ASLink | string;
 
 export type ASContentMap = {[key: string]: string}[];
 
-export interface ASObject {
-  '@context'?: string | string[];
+export interface ASObject extends ASRoot {
+  '@context'?: ASContext | ASContext[];
   id?: string;
   type: string | string[];
   attachment?: ASObjectOrLink | ASObjectOrLink[];
@@ -21,7 +24,7 @@ export interface ASObject {
   generator?: ASObjectOrLink | ASObjectOrLink[];
   icon?: ASObjectOrLink | ASObjectOrLink[];
   image?: ASObjectOrLink | ASObjectOrLink[];
-  inReplyTo?: ASObjectOrLink | ASObjectOrLink[];
+  inReplyTo?: ASObjectOrLink;
   location?: ASObjectOrLink | ASObjectOrLink[];
   preview?: ASObjectOrLink | ASObjectOrLink[];
   published?: string;
